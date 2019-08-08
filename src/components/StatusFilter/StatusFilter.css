@@ -1,0 +1,15 @@
+
+.status-filter {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -o-flex;
+	display: flex;
+}
+
+
+
+.status-filter button {
+	margin-left: 7px;
+}
+
