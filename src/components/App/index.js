@@ -6,25 +6,39 @@ import TaskList from '../TaskList'
 import AddPanel from '../AddPanel'
 import './App.css'
 
-let tasks = [
-		{label: 'Drink coffee', id: 1, done: false, important: false},
-		{label: 'Make awesome react app', id: 2, done: false, important: false}
-	];
-
 export default class App extends Component {
 
-	state = {
-		tasks: tasks
+	counter = 0;
+
+	createTask = (label) =>{
+		return {
+			label: label,
+			id: ++this.counter,
+			done: false,
+			important: false,
+			show: true
+		}
 	}
 
-	counter = tasks.length;
-	
+	state = {
+		tasks: [
+			this.createTask('Drink coffee'),
+			this.createTask ('Make awesome react app')
+		],
+		filter: 'all'
+	}
+
 	render () {
+		console.log(this.state.filter);
 		return (
 			<div className="container">
 				<h1 className="app-header">TODO List</h1>
-				<SearchPanel />
-				<TaskList tasks = {this.state.tasks} 
+				<SearchPanel filter={this.state.filter}
+							filterHandler={this.filterTasks}
+							searchHandler={this.searchTasks}/>
+				<TaskList tasks = {this.state.tasks.filter((task)=>{
+					return task.show;
+				})}
 					delHandler = {this.delTask}
 					toggleDone = {this.toggleDone}
 					toggleImportant = {this.toggleImportant}/>
@@ -32,15 +46,20 @@ export default class App extends Component {
 			</div>
 		);
 	}
+
+	searchTasks = (search) => {
+		console.log(search);
+	}
+
+	filterTasks = (filter) => {
+		this.setState({
+			filter: filter
+		});
+	}
+
 	addTask = (value) => {
 		
-		const newTask = {
-			label: value,
-			id: ++this.counter,
-			done: false,
-			important: false
-		}
-
+		const newTask = this.createTask(value);
 		this.setState (({tasks})=>{
 			return {
 				tasks: [...tasks, newTask]
