@@ -10,8 +10,9 @@ export default class AddPanel extends Component {
 				type="text" placeholder="Description task here ..."/>
 				<button className="btn btn-primary"
 					onClick={() => {
-						const desc = document.querySelector('.add-task').value;
-						this.props.addHandler(desc);
+						const desc = document.querySelector('.add-task');
+						this.props.addHandler(desc.value);
+						desc.value = '';
 					}}>Add</button>
 			</div>
 		);

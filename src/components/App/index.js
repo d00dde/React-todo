@@ -16,7 +16,6 @@ export default class App extends Component {
 			id: ++this.counter,
 			done: false,
 			important: false,
-			show: true
 		}
 	}
 
@@ -25,20 +24,20 @@ export default class App extends Component {
 			this.createTask('Drink coffee'),
 			this.createTask ('Make awesome react app')
 		],
-		filter: 'all'
+		filter: 'all',
+		search: ''
 	}
 
 	render () {
-		console.log(this.state.filter);
+		console.log(this.state.search);
 		return (
 			<div className="container">
 				<h1 className="app-header">TODO List</h1>
 				<SearchPanel filter={this.state.filter}
-							filterHandler={this.filterTasks}
-							searchHandler={this.searchTasks}/>
-				<TaskList tasks = {this.state.tasks.filter((task)=>{
-					return task.show;
-				})}
+							filterHandler={this.setFilter}
+							searchValue={this.state.search}
+							searchHandler={this.setSearch}/>
+				<TaskList tasks = {this.filterTasks()}
 					delHandler = {this.delTask}
 					toggleDone = {this.toggleDone}
 					toggleImportant = {this.toggleImportant}/>
@@ -47,11 +46,30 @@ export default class App extends Component {
 		);
 	}
 
-	searchTasks = (search) => {
-		console.log(search);
+	filterTasks = () => {
+		let tasks = this.state.tasks;
+		if(this.state.filter === 'active'){
+			tasks = tasks.filter((task) => {
+				return !task.done;
+			});
+		} else if (this.state.filter === 'done') {
+				tasks = tasks.filter((task) => {
+				return task.done;
+			});
+		}
+		tasks = tasks.filter((task) => {
+			return !(-1 === task.label.toLowerCase().indexOf(this.state.search.toLowerCase()));
+		});
+		return tasks;
 	}
 
-	filterTasks = (filter) => {
+	setSearch = (search) => {
+		this.setState({
+			search: search
+		});
+	}
+
+	setFilter = (filter) => {
 		this.setState({
 			filter: filter
 		});
